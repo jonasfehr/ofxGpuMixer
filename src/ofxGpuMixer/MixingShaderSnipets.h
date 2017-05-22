@@ -1,13 +1,12 @@
 //
 //  shaderSnippets.h
-//  WAVE_POV
 //
 //  Created by Jonas Fehr on 23/01/2017.
 //
 //
 
-#ifndef shaderSnippets_h
-#define shaderSnippets_h
+#ifndef MixingShaderSnipets_h
+#define MixingShaderSnipets_h
 
 #define STRINGIFY(x) #x
 
@@ -256,7 +255,7 @@ STRINGIFY(
           }
           );
 
-#endif /* shaderSnippets_h */
+#endif /* MixingShaderSnipets_h */
               
               
               // --- unused

@@ -1,30 +1,12 @@
-//
-//  ofxFboMixer.h
-//  WAVE_POV
-//
-//  Created by Jonas Fehr on 23/01/2017.
-//
-//
-
-#ifndef ofxFboMixer_h
-#define ofxFboMixer_h
+#pragma once
 
 #define STRINGIFY(x) #x
-#include "shaderSnippets.h"
+#include "MixingShaderSnipets.h"
+#include "ShaderChannel.h"
+#include "Constants.h"
 
-enum BlendModes_Mixer : int {
-    BLEND_PASS = 0,
-    BLEND_ADD = 1,
-    BLEND_MULTIPLY = 2,
-    BLEND_LIGHTEN = 3,
-    BLEND_DARKEN = 4,
-    BLEND_SUBTRACT = 5,
-    BLEND_SCREEN = 6,
-    BLEND_AVERAGE = 7,
-    BLEND_SOFT_LIGHT = 8,
-    BLEND_OVERLAY = 9,
-    BLEND_ONTOP = 10
-};
+OFX_GPUMIXER_BEGIN_NAMESPACE
+
 
 class TextureGroup{
 public:
@@ -55,8 +37,9 @@ public:
 
 };
 
-class ofxFboMixer{
+class Mixer{
 public:
+    
     void draw(int x, int y, int w, int h){
         shader.begin();
         {
@@ -89,6 +72,13 @@ public:
         texGroups.push_back( texGroup );
         setup();
     }
+    
+    void addShaderChannel(ShaderChannel channel, int blendMode){
+        addFboChannel(channel.getFboPtr(), channel.getName(), blendMode);
+    }
+    
+    void addShaderChannel
+    
     
     ofParameterGroup* getPointerToParameterGroup(){ return &parameterGroup; }
     
@@ -149,4 +139,4 @@ private:
 };
 
 
-#endif /* ofxFboMixer_h */
+OFX_GPUMIXER_END_NAMESPACE
