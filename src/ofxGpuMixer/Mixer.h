@@ -18,11 +18,11 @@ public:
     ofParameter<float> opacity;
     ofParameter<int> blendMode;
     
-    ofFbo *fbo;
+    ofTexture texture;
     
-    TextureGroup(string name, int blendMode, ofFbo *fbo){
+    TextureGroup(string name, int blendMode, ofTexture texture){
         addParameters(name, blendMode);
-        this->fbo = fbo;
+        this->texture = texture;
     }
     
     void addParameters(string name, int initialBlendMode){
@@ -48,14 +48,14 @@ public:
             shader.setUniform1f("iGlobalTime", ofGetElapsedTimef()); //tempo p nr 1
             
             for(int i = 0; i < texGroups.size(); i++){
-                shader.setUniformTexture("tex"+ofToString(i), texGroups[i].fbo->getTexture(), i);
+                shader.setUniformTexture("tex"+ofToString(i), texGroups[i].texture, i);
                 shader.setUniform1f("u_H_"+ofToString(i), texGroups[i].hue);
                 shader.setUniform1f("u_S_"+ofToString(i), texGroups[i].saturation);
                 shader.setUniform1f("u_B_"+ofToString(i), texGroups[i].brightness);
                 shader.setUniform1f("u_contrast_"+ofToString(i), texGroups[i].contrast);
                 shader.setUniform1f("u_opacity_"+ofToString(i), texGroups[i].opacity);
                 shader.setUniform1i("u_blendMode_"+ofToString(i), texGroups[i].blendMode);
-                shader.setUniform2f("resolution_"+ofToString(i), texGroups[i].fbo->getWidth(), texGroups[i].fbo->getHeight());
+                shader.setUniform2f("resolution_"+ofToString(i), texGroups[i].texture.getWidth(), texGroups[i].texture.getHeight());
                 
             }
             
@@ -67,17 +67,21 @@ public:
         
     }
     
-    void addFboChannel(ofFbo * fbo, string name, int blendMode){
-        TextureGroup texGroup = TextureGroup(name, blendMode, fbo);
+    void addChannel(ofFbo * fbo, string name, int blendMode){
+        TextureGroup texGroup = TextureGroup(name, blendMode, fbo->getTexture());
         texGroups.push_back( texGroup );
         setup();
     }
     
-    void addShaderChannel(ShaderChannel channel, int blendMode){
-        addFboChannel(channel.getFboPtr(), channel.getName(), blendMode);
+    void addChannel(ShaderChannel channel, int blendMode){
+        addChannel(channel.getFboPtr(), channel.getName(), blendMode);
     }
     
-    void addShaderChannel
+    void addChannel(ofTexture texture, string name, int blendMode){
+        TextureGroup texGroup = TextureGroup(name, blendMode, texture);
+        texGroups.push_back( texGroup );
+        setup();
+    }
     
     
     ofParameterGroup* getPointerToParameterGroup(){ return &parameterGroup; }
