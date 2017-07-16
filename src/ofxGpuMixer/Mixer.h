@@ -41,6 +41,8 @@ class Mixer{
 public:
     
     void draw(int x, int y, int w, int h){
+        ofPushMatrix();
+        ofTranslate(x,y);
         shader.begin();
         {
             
@@ -61,9 +63,10 @@ public:
             
             ofSetColor(255,255,255);
             ofFill();
-            ofDrawRectangle(x, x, w, h);
+            ofDrawRectangle(0, 0, w, h);
         }
         shader.end();
+        ofPopMatrix();
         
     }
     
