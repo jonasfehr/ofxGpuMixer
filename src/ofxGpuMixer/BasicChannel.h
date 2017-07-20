@@ -3,7 +3,6 @@
 OFX_GPUMIXER_BEGIN_NAMESPACE
 
 
-
 class BasicChannel{
 public:
     ofFbo fbo;
@@ -15,6 +14,8 @@ public:
     virtual void setup(){};
     
     virtual void update(){};
+    virtual void setupParameterGroup(string name){}
+
     
     void draw(){
         fbo.draw(0,0);
@@ -26,17 +27,10 @@ public:
         fbo.draw(x,y,w,h);
     }
     
-    ofTexture* getTexturePtr(){ return &fbo.getTexture(); }
-    ofTexture getTexture(){ return fbo.getTexture(); }
-
-    
-    ofFbo* getFboPtr(){ return &fbo; }
-    
-    virtual void setupParameterGroup(string name){}
-    
-    ofParameterGroup* getPointerToParameterGroup(){ return &parameterGroup; }
-    
-    string getName(){ return name; }
+    ofTexture& getTexture(){ return fbo.getTexture(); }
+    ofFbo& getFbo(){ return fbo; }
+    ofParameterGroup& getParameterGroup(){ return parameterGroup; }
+    string& getName(){ return name; }
     
     
 private:

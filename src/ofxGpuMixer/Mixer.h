@@ -34,7 +34,7 @@ public:
         parameters.add(opacity.set("opacity", 1., 0., 1.));
         parameters.add(blendMode.set("blendMode", initialBlendMode, 1, 10));
     }
-
+    
 };
 
 class Mixer{
@@ -70,14 +70,14 @@ public:
         
     }
     
-    void addChannel(ofFbo * fbo, string name, int blendMode){
-        TextureGroup texGroup = TextureGroup(name, blendMode, fbo->getTexture());
+    void addChannel(ofFbo& fbo, string name, int blendMode){
+        TextureGroup texGroup = TextureGroup(name, blendMode, fbo.getTexture());
         texGroups.push_back( texGroup );
         setup();
     }
     
     void addChannel(ShaderChannel channel, int blendMode){
-        addChannel(channel.getFboPtr(), channel.getName(), blendMode);
+        addChannel(channel.getFbo(), channel.getName(), blendMode);
     }
     
     void addChannel(ofTexture texture, string name, int blendMode){
@@ -87,7 +87,7 @@ public:
     }
     
     
-    ofParameterGroup* getPointerToParameterGroup(){ return &parameterGroup; }
+    ofParameterGroup& getParameterGroup(){ return parameterGroup; }
     
     vector<ofParameterGroup*> getVectorOfParameterSubgroups(){
         
@@ -98,7 +98,7 @@ public:
         }
         return paramSubGroups;
     }
-
+    
 private:
     vector <TextureGroup> texGroups;
     ofShader shader;
