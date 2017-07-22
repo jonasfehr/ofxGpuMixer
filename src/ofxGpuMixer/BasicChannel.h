@@ -1,13 +1,14 @@
 #pragma once
 
 OFX_GPUMIXER_BEGIN_NAMESPACE
-
+#include "MappingImage.h"
 
 class BasicChannel{
 public:
     ofFbo fbo;
     ofParameterGroup parameterGroup;
     string name;
+    MappingImage mappingImg;
     
     BasicChannel(){};
     

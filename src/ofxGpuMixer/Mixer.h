@@ -42,30 +42,32 @@ public:
     
     void draw(int x, int y, int w, int h){
         ofPushMatrix();
-        ofTranslate(x,y);
-        shader.begin();
         {
-            
-            shader.setUniform2f("iResolution", w, h);
-            shader.setUniform1f("iGlobalTime", ofGetElapsedTimef()); //tempo p nr 1
-            
-            for(int i = 0; i < texGroups.size(); i++){
-                shader.setUniformTexture("tex"+ofToString(i), texGroups[i].texture, i);
-                shader.setUniform1f("u_H_"+ofToString(i), texGroups[i].hue);
-                shader.setUniform1f("u_S_"+ofToString(i), texGroups[i].saturation);
-                shader.setUniform1f("u_B_"+ofToString(i), texGroups[i].brightness);
-                shader.setUniform1f("u_contrast_"+ofToString(i), texGroups[i].contrast);
-                shader.setUniform1f("u_opacity_"+ofToString(i), texGroups[i].opacity);
-                shader.setUniform1i("u_blendMode_"+ofToString(i), texGroups[i].blendMode);
-                shader.setUniform2f("resolution_"+ofToString(i), texGroups[i].texture.getWidth(), texGroups[i].texture.getHeight());
+           // ofTranslate(x,y);
+            shader.begin();
+            {
                 
+                shader.setUniform2f("iResolution", w, h);
+                shader.setUniform1f("iGlobalTime", ofGetElapsedTimef()); //tempo p nr 1
+                
+                for(int i = 0; i < texGroups.size(); i++){
+                    shader.setUniformTexture("tex"+ofToString(i), texGroups[i].texture, i);
+                    shader.setUniform1f("u_H_"+ofToString(i), texGroups[i].hue);
+                    shader.setUniform1f("u_S_"+ofToString(i), texGroups[i].saturation);
+                    shader.setUniform1f("u_B_"+ofToString(i), texGroups[i].brightness);
+                    shader.setUniform1f("u_contrast_"+ofToString(i), texGroups[i].contrast);
+                    shader.setUniform1f("u_opacity_"+ofToString(i), texGroups[i].opacity);
+                    shader.setUniform1i("u_blendMode_"+ofToString(i), texGroups[i].blendMode);
+                    shader.setUniform2f("resolution_"+ofToString(i), texGroups[i].texture.getWidth(), texGroups[i].texture.getHeight());
+                    
+                }
+                
+                ofSetColor(255,255,255);
+                ofFill();
+                ofDrawRectangle(0, 0, w, h);
             }
-            
-            ofSetColor(255,255,255);
-            ofFill();
-            ofDrawRectangle(0, 0, w, h);
+            shader.end();
         }
-        shader.end();
         ofPopMatrix();
         
     }

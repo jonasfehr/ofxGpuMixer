@@ -233,7 +233,6 @@ STRINGIFY(
     
               vec2 st = gl_FragCoord.xy / iResolution.xy;
               vec3 mixCol = vec3(0.);
-              vec3 rgb = vec3(0.);
           );
               
 static string channel =
@@ -246,11 +245,11 @@ STRINGIFY(
 //          colTex_$0 = contrastMatrix( 1.+u_contrast_$0*2. ) * colTex_$0;
           
         //  colTex_$0 = postProcessing(colTex_$0,vec3( u_H_$0, u_S_$0, u_B_$0), u_contrast_$0);
+          vec3 rgb_$0 = vec3(0.);
+          rgb_$0 = clamp( abs(mod(u_H_$0*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
+          rgb_$0 = rgb_$0*rgb_$0*(3.0-2.0*rgb_$0);
           
-          rgb = clamp( abs(mod(u_H_$0*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
-          rgb = rgb*rgb*(3.0-2.0*rgb);
-          
-          colTex_$0 = ContrastSaturationBrightness(colTex_$0*rgb,u_B_$0, u_S_$0,u_contrast_$0);
+          colTex_$0 = ContrastSaturationBrightness(colTex_$0*rgb_$0,u_B_$0, u_S_$0,u_contrast_$0);
           mixCol = blendMode( u_blendMode_$0, mixCol, colTex_$0, u_opacity_$0 );
         );
 

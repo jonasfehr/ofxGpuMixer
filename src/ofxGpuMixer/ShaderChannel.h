@@ -29,6 +29,22 @@ public:
         setupParameterGroup(name);
     }
     
+    void setup(string channelName, string shaderNameNPath, int width, int height, MappingImage &mappingImg){
+        this->name = channelName;
+        this->shader.load(shaderNameNPath);
+        this->mappingImg = mappingImg;
+        hasMappingImg = true;
+
+        
+        fbo.allocate(width, height, GL_RGBA32F_ARB);
+        fbo.begin();
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        fbo.end();
+        
+        setupParameterGroup(name);
+    }
+    
     
     void update(){
         fbo.begin();
@@ -39,6 +55,9 @@ public:
                 {
                     shader.setUniform2f("iResolution", fbo.getWidth(), fbo.getHeight());
                     shader.setUniform1f("iGlobalTime", ofGetElapsedTimef() );//counter);
+                    if(hasMappingImg) shader.setUniformTexture("tex0", mappingImg.getTexture(), 0);
+
+                    ("iGlobalTime", ofGetElapsedTimef() );//counter);
                     
                     ofSetColor(255,255,255);
                     ofFill();
@@ -53,6 +72,9 @@ public:
         parameterGroup.setName(name);
         
     }
+    
+private:
+    bool hasMappingImg = false;
 };
 
 
