@@ -51,15 +51,15 @@ public:
         }
         
         ofFloatPixels mappingPixels;
-        mappingPixels.allocate(width, height, 3);
-        mappingPixels.setColor(ofFloatColor(0.,0.,0.)); // Set all to zero
+        mappingPixels.allocate(width, height, 4);
+        mappingPixels.setColor(ofFloatColor(0.,0.,0., 0.)); // Set all to zero
         
         for( auto & s : linearStripsNorm){
             for(int i = 0; i < s.numLeds; i++){
                 float pctOnStrip = (float)i/s.numLeds;
                 ofVec3f posWorld = s.endPosWorld.getInterpolated(s.startPosWorld, pctOnStrip);
                 
-                mappingPixels.setColor(s.startPosOut.x,s.startPosOut.y+i,ofFloatColor(posWorld.x, posWorld.y, posWorld.z));
+                mappingPixels.setColor(s.startPosOut.x,s.startPosOut.y-i,ofFloatColor(posWorld.x, posWorld.y, posWorld.z, pctOnStrip));
             }
 
         }

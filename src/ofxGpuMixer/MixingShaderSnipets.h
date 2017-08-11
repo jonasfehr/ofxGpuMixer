@@ -104,7 +104,7 @@ STRINGIFY(
           
           // Add
           vec3 blendAdd(vec3 base, vec3 blend) {
-              return base + blend;//min(base+blend,vec3(1.0));
+              return base + blend; //min( base + blend , vec3(1.0));
           }
           
           // Multiply
@@ -209,6 +209,8 @@ STRINGIFY(
                     }
 
           vec3 ContrastSaturationBrightness(vec3 color, float brt, float sat, float con){
+              brt *= 2.;
+              con *= 2.;
               // Increase or decrease theese values to adjust r, g and b color channels seperately
               const float AvgLumR = 0.5;
               const float AvgLumG = 0.5;

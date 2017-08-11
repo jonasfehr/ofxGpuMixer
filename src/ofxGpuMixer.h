@@ -4,4 +4,6 @@
 #include "ofxGpuMixer/SyphonClientDirChannel.h"
 #include "ofxGpuMixer/Mixer.h"
 #include "ofxGpuMixer/MappingImage.h"
+#include "ofxGpuMixer/SimpleColorChannel.h"
+
 
