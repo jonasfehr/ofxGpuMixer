@@ -24,6 +24,7 @@ STRINGIFY(
           uniform float u_S_$0;
           uniform float u_B_$0;
           uniform float u_contrast_$0;
+          uniform float u_gain_$0;
           uniform float u_opacity_$0;
           uniform int u_blendMode_$0;
           uniform vec2 resolution_$0;
@@ -239,22 +240,45 @@ STRINGIFY(
               
 static string channel =
 STRINGIFY(
-          vec3 colTex_$0 = texture2DRect(tex$0, resolution_$0 * st ).rgb;
-//          vec3 rgb_$0 = hsv2rgb_smooth(vec3( u_H_$0, u_S_$0, u_B_$0));
-//          
-//          colTex_$0 *= vec(rgb_$0);
-//          
-//          colTex_$0 = contrastMatrix( 1.+u_contrast_$0*2. ) * colTex_$0;
-          
-        //  colTex_$0 = postProcessing(colTex_$0,vec3( u_H_$0, u_S_$0, u_B_$0), u_contrast_$0);
-          vec3 rgb_$0 = vec3(0.);
-          rgb_$0 = clamp( abs(mod(u_H_$0*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
-          rgb_$0 = rgb_$0*rgb_$0*(3.0-2.0*rgb_$0);
-          
-          colTex_$0 = ContrastSaturationBrightness(colTex_$0*rgb_$0,u_B_$0, u_S_$0,u_contrast_$0);
-          mixCol = blendMode( u_blendMode_$0, mixCol, colTex_$0, u_opacity_$0 );
-        );
+          vec4 colTex_$0 = texture2DRect(tex$0, resolution_$0 * st ).rgba;
 
+          if(u_blendMode_$0==11){
+              mixCol = blendMode( 1, mixCol, colTex_$0.rgb, u_opacity_$0 );
+          }
+        else {
+            colTex_$0.rgb /= colTex_$0.a;
+            
+            // Apply gain.
+            colTex_$0.rgb *= u_gain_$0;
+            
+            // Apply contrast.
+            colTex_$0.rgb = ((colTex_$0.rgb - 0.5f) * max(u_contrast_$0, 0)) + 0.5f;
+            
+        
+            
+            // Apply Tint
+            vec3 rgb_$0 = hsv2rgb_smooth(vec3( u_H_$0, u_S_$0, u_B_$0));
+            colTex_$0.rgb *= vec3(rgb_$0);
+
+            
+            // Return final pixel color.
+            colTex_$0.rgb *= colTex_$0.a;
+            
+              mixCol = blendMode( u_blendMode_$0, mixCol, colTex_$0.rgb*u_opacity_$0, 0.5 );
+            
+
+          }
+        );
+              
+              //              vec3 rgb_$0 = vec3(0.);
+              //              rgb_$0 = clamp( abs(mod(u_H_$0*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
+              //              rgb_$0 = rgb_$0*rgb_$0*(3.0-2.0*rgb_$0);
+              //
+              //              colTex_$0 = ContrastSaturationBrightness(colTex_$0*rgb_$0,u_B_$0, u_S_$0,u_contrast_$0);
+              //colTex_$0 = postProcessing(colTex_$0,vec3( u_H_$0, u_S_$0, u_B_$0), u_contrast_$0);
+              //colTex_$0 = contrastMatrix( 1.+u_contrast_$0*2. ) * colTex_$0;
+
+              
 static string output =
 STRINGIFY(
               gl_FragColor =  vec4(mixCol,1.);

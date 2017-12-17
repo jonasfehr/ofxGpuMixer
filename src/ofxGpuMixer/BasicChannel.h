@@ -8,7 +8,7 @@ public:
     ofFbo fbo;
     ofParameterGroup parameterGroup;
     string name;
-    MappingImage mappingImg;
+
     
     BasicChannel(){};
     

@@ -18,11 +18,19 @@ enum BlendModes_Mixer : int {
     BLEND_AVERAGE = 7,
     BLEND_SOFT_LIGHT = 8,
     BLEND_OVERLAY = 9,
-    BLEND_ONTOP = 10
+    BLEND_ONTOP = 10,
+    PASS_THROUGH = 11
 };
 
+enum ShaderTypes : int{
+    SHADER_SHADERTOY,
+    SHADER_ISF,
+    SHADER_MADMATERIAL
+};
 
 OFX_GPUMIXER_END_NAMESPACE
+
+
 
 
 
