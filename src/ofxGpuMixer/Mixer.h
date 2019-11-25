@@ -2,7 +2,6 @@
 
 #define STRINGIFY(x) #x
 #include "MixingShaderSnipets.h"
-#include "ShaderChannel.h"
 #include "SimpleColorChannel.h"
 #include "Constants.h"
 
@@ -115,11 +114,11 @@ public:
         texGroups.push_back( texGroup );
     }
 
-    void addChannel(ShaderChannel & channel, int blendMode){
+/*    void addChannel(ShaderChannel & channel, int blendMode){
         addChannel(channel.getFbo(), channel.getName(), blendMode);
         channels.push_back(&channel);
     }
-    
+  */
     void addChannel(SimpleColorChannel &  channel, int blendMode){
         addChannel(channel.getFbo(), channel.getName(), blendMode);
         channels.push_back(&channel);

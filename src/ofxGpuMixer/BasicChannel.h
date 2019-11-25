@@ -1,7 +1,6 @@
 #pragma once
 
 OFX_GPUMIXER_BEGIN_NAMESPACE
-#include "MappingImage.h"
 
 class BasicChannel{
 public:
