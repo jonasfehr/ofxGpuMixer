@@ -26,17 +26,18 @@ void ofApp::update(){
     int s = ofGetHeight()/3;
     fboA.begin();
     {
-        ofBackground(0,0,255);
-        ofSetColor(255,255,0);
-        ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, s);
+        ofBackground(0);
+        ofSetColor(255);
+        ofDrawRectangle(ofGetWidth()/2-s-100, ofGetHeight()/2-s, s*2, s*2);
     }
     fboA.end();
     
     fboB.begin();
     {
-        ofBackground(255, 0, 0);
-        ofSetColor(0, 255, 255);
-        ofDrawRectangle(ofGetWidth()/2-s, ofGetHeight()/2-s, s*2, s*2);
+        ofBackground( 0);
+        ofSetColor(255);
+        ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, s);
+
     }
     fboB.end();
     
@@ -46,7 +47,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    ofBackground(20);
+    ofBackground(0);
     ofSetColor(255);
     mixer.draw(0,0,ofGetWidth(), ofGetHeight());
     

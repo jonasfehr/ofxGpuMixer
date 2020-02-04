@@ -10,14 +10,19 @@ OFX_GPUMIXER_BEGIN_NAMESPACE
 
 class TextureGroup{
 public:
-    ofParameterGroup parameters;
-    ofParameter<float> hue;
-    ofParameter<float> saturation;
-    ofParameter<float> brightness;
-    ofParameter<float> contrast;
-    ofParameter<float> gain;
-    ofParameter<float> opacity;
-    ofParameter<int> blendMode;
+
+    ofParameter<float> hue{"Hue",0.5, 0, 1.};
+    ofParameter<float> saturation{"Saturation",1, 0, 1.};
+    ofParameter<float> brightness{"Brightness",1, 0, 1.};
+    ofParameter<float> tintAmt{"TintAmt", 0, 0., 1};
+    ofParameter<float> contrast{"Contrast", 1., 0., 2.};
+    ofParameter<float> gain{"Gain", 1.0, 1., 5.};
+    ofParameter<float> opacity{"Opacity", 1., 0., 1.};
+    ofParameter<int> blendMode{"blendMode", 1, 1, 11};
+    
+    ofParameterGroup parametersTint{"Tint", hue, saturation, brightness, tintAmt};
+    ofParameterGroup parameters{"Channel", parametersTint, contrast, gain, opacity, blendMode};
+    
     string name;
     
     ofTexture texture;
@@ -30,13 +35,7 @@ public:
     
     void addParameters(string name, int initialBlendMode){
         parameters.setName(name);
-        parameters.add(hue.set("hue", ofRandom(1.), 0., 1.));
-        parameters.add(saturation.set("saturation", 1., 0., 1.));
-        parameters.add(brightness.set("brightness", 1., 0., 1.));
-        parameters.add(gain.set("gain", 1.0, 1., 5.));
-        parameters.add(contrast.set("contrast", .5, 0., 2.));
-        parameters.add(opacity.set("opacity", 1., 0., 1.));
-        parameters.add(blendMode.set("blendMode", initialBlendMode, 1, 11));
+        blendMode = initialBlendMode;
     }
     
 };
@@ -82,6 +81,7 @@ public:
                     shader.setUniform1f("u_H_"+ofToString(i), texGroups[i].hue);
                     shader.setUniform1f("u_S_"+ofToString(i), texGroups[i].saturation);
                     shader.setUniform1f("u_B_"+ofToString(i), texGroups[i].brightness);
+                    shader.setUniform1f("u_tintAmt_"+ofToString(i), texGroups[i].tintAmt);
                     shader.setUniform1f("u_contrast_"+ofToString(i), texGroups[i].contrast);
                     shader.setUniform1f("u_gain_"+ofToString(i), texGroups[i].gain);
                     shader.setUniform1f("u_opacity_"+ofToString(i), texGroups[i].opacity);
