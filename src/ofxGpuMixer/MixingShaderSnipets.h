@@ -194,7 +194,6 @@ STRINGIFY(
                   
               }else if( mode == 9 ){
                   return blendOverlay(base.rgb, blend.rgb) * opacity + base.rgb * (1.0 - opacity);
-                  
               }
           }
           
@@ -243,7 +242,7 @@ static string channel =
 STRINGIFY(
             vec4 colTex_$0 = texture2DRect(tex$0, resolution_$0 * st ).rgba;
             
-                if(u_blendMode_$0 == 11){
+                if(u_blendMode_$0 == 10){
                     mixCol.rgb = blendMode( 1, mixCol.rgb, colTex_$0.rgb, u_opacity_$0 );
                 } else {
                     colTex_$0.rgb /= colTex_$0.a;
