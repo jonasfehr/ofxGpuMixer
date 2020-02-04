@@ -157,6 +157,7 @@ public:
         TextureGroup texGroup = TextureGroup(name, blendMode, texture);
         if(isFirst){
             texGroup.parametersWithoutBlendMode();
+            texGroup.blendMode = PASS_THROUGH;
             isFirst = false;
         }
         texGroups.push_back( texGroup );
