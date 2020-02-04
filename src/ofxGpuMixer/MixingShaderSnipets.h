@@ -236,41 +236,39 @@ STRINGIFY(
           void main(){
     
               vec2 st = gl_FragCoord.xy / iResolution.xy;
-              vec3 mixCol = vec3(0.);
-              float alpha = 1.0;
-
+              vec4 mixCol = vec4(0.);
           );
               
 static string channel =
 STRINGIFY(
-          vec4 colTex_$0 = texture2DRect(tex$0, resolution_$0 * st ).rgba;
-          if(u_blendMode_$0 == 11){
-            alpha = ( colTex_$0.r + colTex_$0.g + colTex_$0.b ) / 3.0;
-          } else if(u_blendMode_$0 == 12){
-              mixCol = blendMode( 1, mixCol, colTex_$0.rgb, u_opacity_$0 );
-          } else {
-            colTex_$0.rgb /= colTex_$0.a;
+            vec4 colTex_$0 = texture2DRect(tex$0, resolution_$0 * st ).rgba;
             
-            // Apply gain.
-            colTex_$0.rgb *= u_gain_$0;
+                if(u_blendMode_$0 == 11){
+                    mixCol.rgb = blendMode( 1, mixCol.rgb, colTex_$0.rgb, u_opacity_$0 );
+                } else {
+                    colTex_$0.rgb /= colTex_$0.a;
             
-            // Apply contrast.
-            colTex_$0.rgb = ((colTex_$0.rgb - 0.5f) * max(u_contrast_$0, 0)) + 0.5f;
+                    // Apply gain.
+                    colTex_$0.rgb *= u_gain_$0;
             
-        
+                    // Apply contrast.
+                    colTex_$0.rgb = ((colTex_$0.rgb - 0.5f) * max(u_contrast_$0, 0)) + 0.5f;
             
-            // Apply Tint
-            vec3 rgb_$0 = hsv2rgb_smooth(vec3( u_H_$0, u_S_$0, u_B_$0));
-            colTex_$0.rgb = colTex_$0.rgb*(1-u_tintAmt_$0)+colTex_$0.rgb*vec3(rgb_$0)*u_tintAmt_$0;
+                    // Apply Tint
+                    vec3 rgb_$0 = hsv2rgb_smooth(vec3( u_H_$0, u_S_$0, u_B_$0));
+                    colTex_$0.rgb = colTex_$0.rgb*(1-u_tintAmt_$0)+colTex_$0.rgb*vec3(rgb_$0)*u_tintAmt_$0;
 
             
-            // Return final pixel color.
-            colTex_$0.rgb *= colTex_$0.a;
+                    // Return final pixel color.
+                    colTex_$0.rgb *= colTex_$0.a;
             
-              mixCol = blendMode( u_blendMode_$0, mixCol, colTex_$0.rgb*u_opacity_$0, 1 );
-            
-
-          }
+                    mixCol.rgb = blendMode( u_blendMode_$0, mixCol.rgb, colTex_$0.rgb*u_opacity_$0, 1 );
+                }
+                if (colTex_$0.a <= 0.0){
+                    mixCol = vec4(0.0,0.0,0.0,0.0);
+                } else {
+                    mixCol = vec4(mixCol.rgb, u_opacity_$0);
+                }
         );
               
               //              vec3 rgb_$0 = vec3(0.);
@@ -284,7 +282,7 @@ STRINGIFY(
               
 static string output =
 STRINGIFY(
-              gl_FragColor =  vec4(mixCol, alpha);
+              gl_FragColor =  mixCol;
           }
           );
 

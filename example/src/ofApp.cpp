@@ -6,12 +6,11 @@ void ofApp::setup(){
     fboA.allocate(ofGetWidth(),ofGetHeight());
     fboB.allocate(ofGetWidth(),ofGetHeight());
     texB = fboB.getTexture(); // adding a texture insted of a fbo
-    colorChannel.setup("Red", ofColor(255,0,0),ofGetWidth(),ofGetHeight());
+    colorChannel.setup("Background", ofColor(255,0,0), ofGetWidth(),ofGetHeight());
 
-    
+    mixer.addChannel(colorChannel, ofxGpuMixer::BLEND_ADD);
     mixer.addChannel(fboA,"A", ofxGpuMixer::BLEND_ADD);
     mixer.addChannel(texB,"B", ofxGpuMixer::BLEND_ADD);
-    mixer.addChannel(colorChannel, ofxGpuMixer::BLEND_ADD);
 
     mixer.setup(); // Creates the shader in order to mix.
     
@@ -26,7 +25,7 @@ void ofApp::update(){
     int s = ofGetHeight()/3;
     fboA.begin();
     {
-        ofBackground(0);
+        ofBackground(0,255);
         ofSetColor(255);
         ofDrawRectangle(ofGetWidth()/2-s-100, ofGetHeight()/2-s, s*2, s*2);
     }
@@ -34,10 +33,9 @@ void ofApp::update(){
     
     fboB.begin();
     {
-        ofBackground( 0);
+        ofBackground(0,0,0);
         ofSetColor(255);
         ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, s);
-
     }
     fboB.end();
     

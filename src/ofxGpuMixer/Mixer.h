@@ -18,7 +18,7 @@ public:
     ofParameter<float> contrast{"Contrast", 1., 0., 2.};
     ofParameter<float> gain{"Gain", 1.0, 1., 5.};
     ofParameter<float> opacity{"Opacity", 1., 0., 1.};
-    ofParameter<int> blendMode{"blendMode", 1, 1, 12};
+    ofParameter<int> blendMode{"blendMode", 1, 1, 11};
     
     ofParameterGroup parametersTint{"Tint", hue, saturation, brightness, tintAmt};
     ofParameterGroup parameters{"Channel", parametersTint, contrast, gain, opacity, blendMode};
@@ -28,16 +28,11 @@ public:
     ofTexture texture;
     
     TextureGroup(string name, int blendMode, ofTexture texture){
-        addParameters(name, blendMode);
+        parameters.setName(name);
+        this->blendMode = blendMode;
         this->name = name;
         this->texture = texture;
     }
-    
-    void addParameters(string name, int initialBlendMode){
-        parameters.setName(name);
-        blendMode = initialBlendMode;
-    }
-    
 };
 
 class Mixer{
@@ -162,6 +157,10 @@ public:
      */
     void addChannel(SimpleColorChannel &  channel, int blendMode){
         addChannel(channel.getFbo(), channel.getName(), blendMode);
+        texGroups.back().parameters.clear();
+        texGroups.back().parameters.add(channel.color);
+        texGroups.back().parameters.add(texGroups.back().opacity);
+        texGroups.back().parameters.add(texGroups.back().blendMode);
         channels.push_back(&channel);
     }
     

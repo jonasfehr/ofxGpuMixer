@@ -26,8 +26,6 @@ public:
         ofBackground(color);
         fbo.end();
         
-        
-        
         setupParameterGroup(name, color);
     }
     
@@ -36,7 +34,7 @@ public:
     void update(){
         fbo.begin();
         {
-                glClearColor(0.0, 0.0, 0.0, 0.0);
+            glClearColor(0.0, 0.0, 0.0, 0.0);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             ofBackground(color);
         }
@@ -44,14 +42,7 @@ public:
     }
     
     void setupParameterGroup(string name, ofColor color){
-
-        
-            ;
-         
-               
             parameterGroup.add(this->color.set("BasicColor", color, ofColor::black, ofColor::white));
-    
-        
     }
     
 private:
