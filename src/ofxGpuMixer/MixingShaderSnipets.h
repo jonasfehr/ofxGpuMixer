@@ -237,17 +237,19 @@ STRINGIFY(
     
               vec2 st = gl_FragCoord.xy / iResolution.xy;
               vec3 mixCol = vec3(0.);
+              float alpha = 1.0;
+
           );
               
 static string channel =
 STRINGIFY(
           vec4 colTex_$0 = texture2DRect(tex$0, resolution_$0 * st ).rgba;
-
-          if(u_blendMode_$0==11){
+          if(u_blendMode_$0 == 11){
+            alpha = ( colTex_$0.r + colTex_$0.g + colTex_$0.b ) / 3.0;
+          } else if(u_blendMode_$0 == 12){
               mixCol = blendMode( 1, mixCol, colTex_$0.rgb, u_opacity_$0 );
-          }
-        else {
-//            colTex_$0.rgb /= colTex_$0.a;
+          } else {
+            colTex_$0.rgb /= colTex_$0.a;
             
             // Apply gain.
             colTex_$0.rgb *= u_gain_$0;
@@ -263,7 +265,7 @@ STRINGIFY(
 
             
             // Return final pixel color.
-//          colTex_$0.rgb *= colTex_$0.a;
+            colTex_$0.rgb *= colTex_$0.a;
             
               mixCol = blendMode( u_blendMode_$0, mixCol, colTex_$0.rgb*u_opacity_$0, 1 );
             
@@ -282,7 +284,7 @@ STRINGIFY(
               
 static string output =
 STRINGIFY(
-              gl_FragColor =  vec4(mixCol,1.);
+              gl_FragColor =  vec4(mixCol, alpha);
           }
           );
 

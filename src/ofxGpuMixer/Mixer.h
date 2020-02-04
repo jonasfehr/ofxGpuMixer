@@ -18,7 +18,7 @@ public:
     ofParameter<float> contrast{"Contrast", 1., 0., 2.};
     ofParameter<float> gain{"Gain", 1.0, 1., 5.};
     ofParameter<float> opacity{"Opacity", 1., 0., 1.};
-    ofParameter<int> blendMode{"blendMode", 1, 1, 11};
+    ofParameter<int> blendMode{"blendMode", 1, 1, 12};
     
     ofParameterGroup parametersTint{"Tint", hue, saturation, brightness, tintAmt};
     ofParameterGroup parameters{"Channel", parametersTint, contrast, gain, opacity, blendMode};

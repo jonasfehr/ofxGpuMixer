@@ -19,7 +19,8 @@ enum BlendModes_Mixer : int {
     BLEND_SOFT_LIGHT = 8,
     BLEND_OVERLAY = 9,
     BLEND_ONTOP = 10,
-    PASS_THROUGH = 11
+    BLEND_ALPHA = 11,
+    PASS_THROUGH = 12
 };
 
 enum ShaderTypes : int{
