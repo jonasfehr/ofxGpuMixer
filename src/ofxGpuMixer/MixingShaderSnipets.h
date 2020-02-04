@@ -263,7 +263,7 @@ STRINGIFY(
 
             
             // Return final pixel color.
-          colTex_$0.rgb *= colTex_$0.a;
+//          colTex_$0.rgb *= colTex_$0.a;
             
               mixCol = blendMode( u_blendMode_$0, mixCol, colTex_$0.rgb*u_opacity_$0, 1 );
             

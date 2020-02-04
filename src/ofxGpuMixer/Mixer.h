@@ -10,7 +10,7 @@ OFX_GPUMIXER_BEGIN_NAMESPACE
 
 class TextureGroup{
 public:
-
+    
     ofParameter<float> hue{"Hue",0.5, 0, 1.};
     ofParameter<float> saturation{"Saturation",1, 0, 1.};
     ofParameter<float> brightness{"Brightness",1, 0, 1.};
@@ -44,17 +44,27 @@ class Mixer{
 public:
     
     vector<BasicChannel*> channels;
+    ofParameter<bool> doPreview{"doPreview", false};
+    ofParameter<int> channelSelect{"channelSelect", 0, 0, 0};
+    
+    ofParameterGroup parameterPreview{"Preview", doPreview, channelSelect};
+    
     
     void setup(){
         
         //ParameterGroup
         parameterGroup.clear();
         parameterGroup.setName("Mixer");
+        
+        channelSelect.setMax(texGroups.size()-1);
+        parameterGroup.add(parameterPreview);
+        
         for(int i = 0; i < texGroups.size(); i++){
             parameterGroup.add(texGroups[i].parameters);
         }
         
         generateShader();
+        generateShaderSingleChannel();
     }
     
     void update(){
@@ -67,8 +77,38 @@ public:
     
     void draw(int x, int y, int w, int h){
         ofPushMatrix();
+        
+        if(doPreview){
+             
+            shaderSingleChannel.begin();
+            {
+                
+                shaderSingleChannel.setUniform2f("iResolution", w, h);
+                shaderSingleChannel.setUniform1f("iGlobalTime", ofGetElapsedTimef()); //tempo p nr 1
+                
+                int i = channelSelect;
+                shaderSingleChannel.setUniformTexture("tex0", texGroups[i].texture, i);
+                shaderSingleChannel.setUniform1f("u_H_0", texGroups[i].hue);
+                shaderSingleChannel.setUniform1f("u_S_0", texGroups[i].saturation);
+                shaderSingleChannel.setUniform1f("u_B_0", texGroups[i].brightness);
+                shaderSingleChannel.setUniform1f("u_tintAmt_0", texGroups[i].tintAmt);
+                shaderSingleChannel.setUniform1f("u_contrast_0", texGroups[i].contrast);
+                shaderSingleChannel.setUniform1f("u_gain_0", texGroups[i].gain);
+                shaderSingleChannel.setUniform1f("u_opacity_0", texGroups[i].opacity);
+                shaderSingleChannel.setUniform1i("u_blendMode_0", 1);
+                shaderSingleChannel.setUniform2f("resolution_0", texGroups[i].texture.getWidth(), texGroups[i].texture.getHeight());
+                
+                
+                ofSetColor(255,255,255);
+                ofFill();
+                ofDrawRectangle(0, 0, w, h);
+            }
+            shaderSingleChannel.end();
+            
+        }
+        else
         {
-           // ofTranslate(x,y);
+            // ofTranslate(x,y);
             shader.begin();
             {
                 
@@ -96,12 +136,13 @@ public:
             }
             shader.end();
         }
+        
         ofPopMatrix();
         
     }
     
-
-
+    
+    
     
     void addChannel(ofFbo& fbo, string name, int blendMode){
         TextureGroup texGroup = TextureGroup(name, blendMode, fbo.getTexture());
@@ -113,12 +154,12 @@ public:
         TextureGroup texGroup = TextureGroup(name, blendMode, texture);
         texGroups.push_back( texGroup );
     }
-
-/*    void addChannel(ShaderChannel & channel, int blendMode){
-        addChannel(channel.getFbo(), channel.getName(), blendMode);
-        channels.push_back(&channel);
-    }
-  */
+    
+    /*    void addChannel(ShaderChannel & channel, int blendMode){
+     addChannel(channel.getFbo(), channel.getName(), blendMode);
+     channels.push_back(&channel);
+     }
+     */
     void addChannel(SimpleColorChannel &  channel, int blendMode){
         addChannel(channel.getFbo(), channel.getName(), blendMode);
         channels.push_back(&channel);
@@ -141,9 +182,10 @@ public:
 private:
     vector <TextureGroup> texGroups;
     ofShader shader;
+    ofShader shaderSingleChannel;
     
     ofParameterGroup parameterGroup;
-
+    
     void generateShader(){
         // GENERATE THE SHADER
         stringstream shaderScript;
@@ -165,6 +207,25 @@ private:
         
         shader.setupShaderFromSource(GL_FRAGMENT_SHADER, shaderScript.str());
         shader.linkProgram();
+    }
+    
+    void generateShaderSingleChannel(){
+        // GENERATE THE SHADER
+        stringstream shaderScript;
+        shaderScript << "#version 120" << endl;
+        shaderScript << uniformsHeader;
+        string snipet = uniforms;
+        ofStringReplace(snipet, "$0", "0");
+        shaderScript << snipet;
+        shaderScript << functions;
+        shaderScript << mainHeader;
+        snipet = channel;
+        ofStringReplace(snipet, "$0", "0");
+        shaderScript << snipet;
+        shaderScript << output;
+        
+        shaderSingleChannel.setupShaderFromSource(GL_FRAGMENT_SHADER, shaderScript.str());
+        shaderSingleChannel.linkProgram();
     }
 };
 
