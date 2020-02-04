@@ -33,6 +33,15 @@ public:
         this->name = name;
         this->texture = texture;
     }
+    
+    void parametersWithoutBlendMode(){
+        parameters.clear();
+        parameters.setName(name);
+        parameters.add(parametersTint);
+        parameters.add(contrast);
+        parameters.add(gain);
+        parameters.add(opacity);
+    }
 };
 
 class Mixer{
@@ -140,13 +149,16 @@ public:
     
     
     void addChannel(ofFbo& fbo, string name, int blendMode){
-        TextureGroup texGroup = TextureGroup(name, blendMode, fbo.getTexture());
-        texGroups.push_back( texGroup );
+        addChannel(fbo.getTexture(), name, blendMode);
     }
     
     
     void addChannel(ofTexture texture, string name, int blendMode){
         TextureGroup texGroup = TextureGroup(name, blendMode, texture);
+        if(isFirst){
+            texGroup.parametersWithoutBlendMode();
+            isFirst = false;
+        }
         texGroups.push_back( texGroup );
     }
     
@@ -156,11 +168,12 @@ public:
      }
      */
     void addChannel(SimpleColorChannel &  channel, int blendMode){
+        bool isFirstCol = isFirst;
         addChannel(channel.getFbo(), channel.getName(), blendMode);
         texGroups.back().parameters.clear();
         texGroups.back().parameters.add(channel.color);
         texGroups.back().parameters.add(texGroups.back().opacity);
-        texGroups.back().parameters.add(texGroups.back().blendMode);
+        if(!isFirstCol) texGroups.back().parameters.add(texGroups.back().blendMode);
         channels.push_back(&channel);
     }
     
@@ -184,6 +197,8 @@ private:
     ofShader shaderSingleChannel;
     
     ofParameterGroup parameterGroup;
+    
+    bool isFirst = true;
     
     void generateShader(){
         // GENERATE THE SHADER
